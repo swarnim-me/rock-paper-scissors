@@ -27,22 +27,31 @@ function playRound(playerSelection, computerSelection) {
 function compareResult(output) {
     switch (output) {
         case 0:
-            return "You Lose!";
+            return "You lost!";
         case 1:
-            return "You Won!";
+            return "You won!";
         case 2:
             return "It is a tie";
         default:
-            return "Wrong Input";
+            return "Wrong input";
     }
 }
 
 function playGame() {
+    var playerScore = 0;
+    var computerScore = 0;
     for (var i = 0; i < 5; i++) {
         const playerSelection = prompt("Enter your choice", "Rock");
         const output = playRound(playerSelection, getComputerChoice());
+        if (output == 1) playerScore++;
+        else if (output == 0) computerScore++;
         console.log(compareResult(output));
     }
+    console.log(`Your score ${playerScore}`);
+    console.log(`Computer score ${computerScore}`);
+    if (playerScore === computerScore) console.log("It is a tie");
+    else if (playerScore > computerScore) console.log("You won the game!");
+    else console.log("You lost the game!");
 }
 
 playGame();
