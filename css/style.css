@@ -39,7 +39,7 @@ body {
 
 .content {
     text-align: center;
-    width: min(90%, 600px);
+    width: min(95%, 600px);
 }
 
 .score-title {
@@ -136,6 +136,7 @@ body {
 
     .option {
         height: 100px;
+        width: 100px;
     }
 
     .play-area img {
