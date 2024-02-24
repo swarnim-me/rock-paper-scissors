@@ -1,71 +1,131 @@
 const themeBtn = document.querySelector(".theme-btn");
 const themeIcon = document.querySelector(".theme-btn img");
+const playerChoice = document.querySelector(".player-choice");
+const computerChoice = document.querySelector(".computer-choice");
+const options = document.querySelector(".options");
+const resultContent = document.querySelector(".result-content");
+const resultText = document.querySelector(".result");
+const playerScoreText = document.querySelector(".player-score");
+const computerScoreText = document.querySelector(".computer-score");
+const playAgainBtn = document.querySelector(".play-again-btn");
+let playerScore = 0;
+let computerScore = 0;
+// Theme change logic
+const toggleIcon = () => {
+    if (document.body.classList.contains("dark-theme")) {
+        themeIcon.src = "assets/images/sun.png";
+    }
+    else {
+        themeIcon.src = "assets/images/moon.png";
+    }
+}
+
+// Initialising the page with correct icons
+toggleIcon();
 
 themeBtn.addEventListener("click", () => {
     document.body.classList.toggle("dark-theme");
-    if (document.body.classList.contains("dark-theme")) {
-        themeIcon.src = "assets/images/moon.png";
-    }
-    else {
-        themeIcon.src = "assets/images/sun.png";
-    }
+    toggleIcon();
 })
 
+function getComputerChoice() {
+    const options = ["Rock", "Paper", "Scissors"];
+    const index = Math.floor(Math.random() * 3);
+    return options[index];
+}
 
-// function getComputerChoice() {
-//     const options = ["Rock", "Paper", "Scissors"];
-//     const index = Math.floor(Math.random() * 3);
-//     return options[index];
-// }
+function playRound(playerSelection, computerSelection) {
+    var isPlayerWinner = 0;
+    if (playerSelection.toLowerCase() === computerSelection.toLowerCase()) isPlayerWinner = 2;
+    else if (playerSelection.toLowerCase() === 'rock') {
+        isPlayerWinner = computerSelection.toLowerCase() === 'scissors' ? 1 : 0;
+    }
+    else if (playerSelection.toLowerCase() === 'paper') {
+        isPlayerWinner = computerSelection.toLowerCase() === 'rock' ? 1 : 0;
+    }
+    else if (playerSelection.toLowerCase() === 'scissors') {
+        isPlayerWinner = computerSelection.toLowerCase() === 'paper' ? 1 : 0;
+    }
+    else {
+        isPlayerWinner = -1;
+    }
+    return isPlayerWinner;
+}
+
+function compareResult(output) {
+    switch (output) {
+        case 0:
+            return "You lost!";
+        case 1:
+            return "You won!";
+        case 2:
+            return "It is a tie";
+        default:
+            return "Wrong input";
+    }
+}
+
+function resetGame() {
+    playerScore = 0;
+    computerScore = 0;
+    updateScore(playerScore, computerScore); // Need to make a state manager for the scores
+    resultContent.style.display = "none";
+    options.addEventListener("click", getInput);
+}
+
+function updateScore(playerScore, computerScore) {
+    playerScoreText.textContent = playerScore;
+    computerScoreText.textContent = computerScore;
+}
+
+function endGame() {
+    resultContent.style.display = "block";
+    options.removeEventListener("click", getInput);
+}
+
+function updateIcon(element, choice) {
+    switch (choice.toLowerCase()) {
+        case 'rock': element.children[0].src = "assets/images/Rock.svg";
+            break;
+        case 'paper': element.children[0].src = "assets/images/Paper.svg";
+            break;
+        case 'scissors': element.children[0].src = "assets/images/Scissors.svg";
+            break;
+    }
+}
 
 
-// function playRound(playerSelection, computerSelection) {
-//     console.log(computerSelection);
-//     var isPlayerWinner = 0;
-//     if (playerSelection.toLowerCase() === computerSelection.toLowerCase()) isPlayerWinner = 2;
-//     else if (playerSelection.toLowerCase() === 'rock') {
-//         isPlayerWinner = computerSelection.toLowerCase() === 'scissors' ? 1 : 0;
-//     }
-//     else if (playerSelection.toLowerCase() === 'paper') {
-//         isPlayerWinner = computerSelection.toLowerCase() === 'rock' ? 1 : 0;
-//     }
-//     else if (playerSelection.toLowerCase() === 'scissors') {
-//         isPlayerWinner = computerSelection.toLowerCase() === 'paper' ? 1 : 0;
-//     }
-//     else {
-//         isPlayerWinner = -1;
-//     }
-//     return isPlayerWinner;
-// }
+function getInput(event) {
+    let optionElement = event.target;
+    if (optionElement.tagName === "IMG") optionElement = optionElement.parentElement;
+    let playerSelection = "";
+    let computerSelection = getComputerChoice();
+    if (optionElement.classList.contains("rock")) playerSelection = "rock";
+    if (optionElement.classList.contains("paper")) playerSelection = "paper";
+    if (optionElement.classList.contains("scissors")) playerSelection = "scissors";
+    updateIcon(playerChoice, playerSelection);
+    updateIcon(computerChoice, computerSelection);
+    const output = playRound(playerSelection, computerSelection);
+    if (output == 1) playerScore++;
+    else if (output == 0) computerScore++;
+    console.log(`${playerScore} - ${computerScore}`)
+    updateScore(playerScore, computerScore);
+    if (playerScore === 5) {
+        resultText.textContent = "YOU WON";
+        endGame();
+    }
+    else if (computerScore === 5) {
+        resultText.textContent = "YOU LOST";
+        endGame();
+    }
+}
 
-// function compareResult(output) {
-//     switch (output) {
-//         case 0:
-//             return "You lost!";
-//         case 1:
-//             return "You won!";
-//         case 2:
-//             return "It is a tie";
-//         default:
-//             return "Wrong input";
-//     }
-// }
+function playGame() {
+    updateScore(playerScore, computerScore);
+    options.addEventListener("click", getInput);
+    playAgainBtn.addEventListener("click", () => {
+        resetGame();
+    })
+}
 
-// function playGame() {
-//     var playerScore = 0;
-//     var computerScore = 0;
-//     for (var i = 0; i < 5; i++) {
-//         const playerSelection = prompt("Enter your choice", "Rock");
-//         const output = playRound(playerSelection, getComputerChoice());
-//         if (output == 1) playerScore++;
-//         else if (output == 0) computerScore++;
-//         console.log(compareResult(output));
-//     }
-//     console.log(`Your score ${playerScore}`);
-//     console.log(`Computer score ${computerScore}`);
-//     if (playerScore === computerScore) console.log("It is a tie");
-//     else if (playerScore > computerScore) console.log("You won the game!");
-//     else console.log("You lost the game!");
-// }
-
-// playGame();
+playGame();

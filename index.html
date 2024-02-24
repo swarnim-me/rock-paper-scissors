@@ -12,13 +12,13 @@
     <script src="js/script.js" defer></script>
 </head>
 
-<body>
+<body class="dark-theme">
     <div class="theme-btn">
-        <img src="assets/images/sun.png" alt="">
+        <img src="assets/images/moon.png" alt="">
     </div>
     <div class="content">
         <h1 class="score-title">score</h1>
-        <h1 class="score"><span>3</span>-<span>2</span></h1>
+        <h1 class="score"><span class="player-score">3</span>-<span class="computer-score">2</span></h1>
         <div class="play-area">
             <div class="player-choice">
                 <img src="./assets/images/Rock.svg" alt="">
@@ -34,12 +34,14 @@
             <div class="paper option">
                 <img src="./assets/images/Paper.svg" alt="">
             </div>
-            <div class="scissorsi option">
+            <div class="scissors option">
                 <img src="./assets/images/Scissors.svg" alt="">
             </div>
         </div>
-        <h1 class="result">You Won</h1>
-        <button class="play-again-btn">Play Again</button>
+        <div class="result-content">
+            <h1 class="result">You Won</h1>
+            <button class="play-again-btn">Play Again</button>
+        </div>
     </div>
 </body>
 
