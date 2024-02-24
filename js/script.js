@@ -1,13 +1,14 @@
 const themeBtn = document.querySelector(".theme-btn");
 const themeIcon = document.querySelector(".theme-btn img");
-const playerChoice = document.querySelector(".player-choice");
-const computerChoice = document.querySelector(".computer-choice");
+const playerChoice = document.querySelector(".player-choice img");
+const computerChoice = document.querySelector(".computer-choice img");
 const options = document.querySelector(".options");
 const resultContent = document.querySelector(".result-content");
 const resultText = document.querySelector(".result");
 const playerScoreText = document.querySelector(".player-score");
 const computerScoreText = document.querySelector(".computer-score");
 const playAgainBtn = document.querySelector(".play-again-btn");
+const CHOICES = ["Rock", "Paper", "Scissors"];
 let playerScore = 0;
 let computerScore = 0;
 // Theme change logic
@@ -29,9 +30,28 @@ themeBtn.addEventListener("click", () => {
 })
 
 function getComputerChoice() {
-    const options = ["Rock", "Paper", "Scissors"];
     const index = Math.floor(Math.random() * 3);
-    return options[index];
+    return CHOICES[index];
+}
+
+function playSelectAnimation(element) {
+    options.removeEventListener("click", getInput);
+    return new Promise((resolve) => {
+        let selection = 'Rock';
+        let index = 0;
+        function changeSelection() {
+            element.src = `assets/images/${selection}.svg`;
+            index++;
+            console.log(index);
+            selection = CHOICES[index % 3];
+            if (index === 20) {
+                clearInterval(intervalId);
+                options.addEventListener("click", getInput);
+                resolve();
+            }
+        }
+        const intervalId = setInterval(changeSelection, 100)
+    })
 }
 
 function playRound(playerSelection, computerSelection) {
@@ -70,6 +90,8 @@ function resetGame() {
     computerScore = 0;
     updateScore(playerScore, computerScore); // Need to make a state manager for the scores
     resultContent.style.display = "none";
+    updateIcon(playerChoice, 'rock');
+    updateIcon(computerChoice, 'rock');
     options.addEventListener("click", getInput);
 }
 
@@ -85,17 +107,17 @@ function endGame() {
 
 function updateIcon(element, choice) {
     switch (choice.toLowerCase()) {
-        case 'rock': element.children[0].src = "assets/images/Rock.svg";
+        case 'rock': element.src = "assets/images/Rock.svg";
             break;
-        case 'paper': element.children[0].src = "assets/images/Paper.svg";
+        case 'paper': element.src = "assets/images/Paper.svg";
             break;
-        case 'scissors': element.children[0].src = "assets/images/Scissors.svg";
+        case 'scissors': element.src = "assets/images/Scissors.svg";
             break;
     }
 }
 
 
-function getInput(event) {
+async function getInput(event) {
     let optionElement = event.target;
     if (optionElement.tagName === "IMG") optionElement = optionElement.parentElement;
     let playerSelection = "";
@@ -104,6 +126,7 @@ function getInput(event) {
     if (optionElement.classList.contains("paper")) playerSelection = "paper";
     if (optionElement.classList.contains("scissors")) playerSelection = "scissors";
     updateIcon(playerChoice, playerSelection);
+    await playSelectAnimation(computerChoice);
     updateIcon(computerChoice, computerSelection);
     const output = playRound(playerSelection, computerSelection);
     if (output == 1) playerScore++;
