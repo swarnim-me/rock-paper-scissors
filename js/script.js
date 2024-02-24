@@ -42,7 +42,6 @@ function playSelectAnimation(element) {
         function changeSelection() {
             element.src = `assets/images/${selection}.svg`;
             index++;
-            console.log(index);
             selection = CHOICES[index % 3];
             if (index === 20) {
                 clearInterval(intervalId);

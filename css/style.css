@@ -61,6 +61,14 @@ body {
     height: 120px;
 }
 
+.player-choice,
+.computer-choice {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .play-area img {
     height: 100%;
     aspect-ratio: 1 / 1;
